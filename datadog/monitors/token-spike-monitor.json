@@ -1,12 +1,13 @@
 {
     "name": "AegisAI - Token Usage Spike Detection",
     "type": "query alert",
-    "query": "avg(last_10m):anomalies(avg:aegisai.tokens.count{*}, 'basic', 3, direction='above', interval=60, alert_window='last_15m', count_default_zero='true') >= 1",
-    "message": "⚠️ **Unusual Token Usage Detected** \\n\\nAegisAI has detected an anomalous spike in token consumption.\\n\\n**Anomaly Score:** {{value}}\\n**Service:** aegisai\\n**Environment:** {{env.name}}\\n**Detection Window:** Last 15 minutes\\n\\n**Potential Causes:**\\n- Unusually long prompts or responses\\n- High volume of requests\\n- Malicious activity (prompt stuffing)\\n- API abuse\\n\\n**Impact:**\\n- Increased Gemini API costs\\n- Potential rate limiting\\n- Budget overrun risk\\n\\n**Recommended Actions:**\\n1. Review recent prompts for abnormal length\\n2. Check for automated/bot traffic\\n3. Verify rate limiting is active\\n4. Review cost dashboard\\n\\n@slack-aegisai-billing",
+    "query": "avg(last_10m):anomalies(avg:aegisai.tokens.used{*}, 'basic', 3, direction='above', interval=60, alert_window='last_15m', count_default_zero='true') >= 1",
+    "message": "## ⚠️ Unusual Token Usage Detected\n\n**SEV-3 Cost/Abuse Alert**\n\nAegisAI has detected an anomalous spike in token consumption.\n\n**Anomaly Score:** {{value}}\n**Service:** aegisai\n**Environment:** {{env.name}}\n**Detection Window:** Last 15 minutes\n\n**Potential Causes:**\n- Unusually long prompts or responses\n- High volume of requests\n- Malicious activity (prompt stuffing)\n- API abuse\n\n**Impact:**\n- Increased Gemini API costs\n- Potential rate limiting\n- Budget overrun risk\n\n**Recommended Actions:**\n1. Review recent prompts for abnormal length\n2. Check for automated/bot traffic\n3. Verify rate limiting is active\n4. Review cost dashboard\n\n@slack-aegisai-billing",
     "tags": [
         "service:aegisai",
         "cost:tokens",
-        "anomaly:detection"
+        "anomaly:detection",
+        "severity:sev3"
     ],
     "options": {
         "thresholds": {

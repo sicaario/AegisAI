@@ -1,6 +1,7 @@
 import express from 'express';
 import geminiService from '../services/geminiService.js';
 import datadogService from '../services/datadogService.js';
+import metricsService from '../services/metricsService.js';
 import detectionService from '../services/detectionService.js';
 import autopsyService from '../services/autopsyService.js';
 import replayService from '../services/replayService.js';
@@ -20,6 +21,9 @@ router.post('/', async (req, res) => {
             });
         }
 
+        // Emit request count metric
+        metricsService.incrementRequestCount();
+
         logger.info('Processing prompt request', { promptLength: prompt.length });
 
         const detectionResult = detectionService.detectPromptInjection(prompt);
@@ -28,6 +32,22 @@ router.post('/', async (req, res) => {
 
         const totalLatency = Date.now() - startTime;
 
+        // Calculate risk level: 0=low, 1=medium, 2=high
+        const riskLevel = detectionResult.isMalicious
+            ? (detectionResult.severity === 'SEV-1' ? 2 : detectionResult.severity === 'SEV-2' ? 1 : 0)
+            : 0;
+
+        // Emit StatsD metrics for observability
+        const metricTags = {
+            malicious: detectionResult.isMalicious,
+            severity: detectionResult.severity || 'none'
+        };
+
+        metricsService.recordLatency(totalLatency, metricTags);
+        metricsService.recordTokensUsed(geminiResponse.tokenCount, metricTags);
+        metricsService.recordPromptRisk(riskLevel, metricTags);
+
+        // Also send to Datadog HTTP API (existing functionality)
         await datadogService.logPromptRequest(prompt, geminiResponse.text, {
             isMalicious: detectionResult.isMalicious,
             matchedPatterns: detectionResult.matchedPatterns,
@@ -96,6 +116,12 @@ router.post('/', async (req, res) => {
         });
 
     } catch (error) {
+        // Emit error metric
+        metricsService.incrementError({
+            error_type: '500',
+            error_name: error.name || 'UnknownError'
+        });
+
         logger.error('Error processing prompt', {
             error: error.message,
             stack: error.stack

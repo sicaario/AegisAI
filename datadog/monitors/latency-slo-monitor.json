@@ -2,11 +2,12 @@
     "name": "AegisAI - Response Latency SLO",
     "type": "metric alert",
     "query": "avg(last_5m):avg:aegisai.request.latency{*} > 2000",
-    "message": "⚠️ **High Latency Detected in AegisAI** \\n\\nThe average response latency has exceeded the 2-second SLO threshold.\\n\\n**Current Latency:** {{value}}ms\\n**Threshold:** 2000ms\\n**Service:** aegisai\\n**Environment:** {{env.name}}\\n\\n**Impact:**\\n- User experience degradation\\n- Potential timeout issues\\n- SLO compliance risk\\n\\n**Recommended Actions:**\\n1. Check Gemini API performance\\n2. Review backend resource utilization\\n3. Investigate slow database queries\\n4. Check network connectivity\\n\\n@slack-aegisai-performance",
+    "message": "## ⚠️ High Latency Detected in AegisAI\n\n**SEV-2 Performance Alert**\n\nThe average response latency has exceeded the 2-second SLO threshold.\n\n**Current Latency:** {{value}}ms\n**Threshold:** 2000ms\n**Service:** aegisai\n**Environment:** {{env.name}}\n\n**Impact:**\n- User experience degradation\n- Potential timeout issues\n- SLO compliance risk\n\n**Recommended Actions:**\n1. Check Gemini API performance\n2. Review backend resource utilization\n3. Investigate slow database queries\n4. Check network connectivity\n\n@slack-aegisai-performance",
     "tags": [
         "service:aegisai",
         "performance:latency",
-        "slo:response-time"
+        "slo:response-time",
+        "severity:sev2"
     ],
     "options": {
         "thresholds": {

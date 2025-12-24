@@ -4,10 +4,22 @@
     "widgets": [
         {
             "definition": {
+                "type": "note",
+                "content": "## 🛡️ LLM Health Overview\\n\\n**What Healthy LLM Operations Look Like:**\\n\\n✅ **Latency**: \u003c 2000ms (P95)\\n✅ **Risk Level**: Majority at 0 (low risk)\\n✅ **Error Rate**: \u003c 1% of requests\\n✅ **Token Usage**: Steady, predictable patterns\\n\\n**Key Signals to Watch:**\\n- **Prompt Risk**: Spikes indicate potential security threats\\n- **Latency Trends**: Sudden increases may signal API issues\\n- **Token Spikes**: Could indicate abuse or unusually long prompts\\n- **Error Count**: Zero is ideal; investigate any errors immediately\\n\\n**This dashboard tracks real-time LLM security and performance metrics via StatsD.**",
+                "background_color": "blue",
+                "font_size": "14",
+                "text_align": "left",
+                "show_tick": false,
+                "tick_pos": "50%",
+                "tick_edge": "left"
+            }
+        },
+        {
+            "definition": {
                 "type": "timeseries",
                 "requests": [
                     {
-                        "q": "sum:aegisai.request.latency{*}.as_count()",
+                        "q": "sum:aegisai.request.latency{*}",
                         "display_type": "line",
                         "style": {
                             "palette": "dog_classic",
@@ -16,7 +28,7 @@
                         }
                     }
                 ],
-                "title": "Request Latency Over Time",
+                "title": "Request Latency Over Time (StatsD)",
                 "show_legend": true,
                 "legend_size": "0"
             }
@@ -53,10 +65,70 @@
         },
         {
             "definition": {
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "q": "sum:aegisai.tokens.used{*}",
+                        "display_type": "bars",
+                        "style": {
+                            "palette": "purple",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        }
+                    }
+                ],
+                "title": "Token Usage Over Time (StatsD)"
+            }
+        },
+        {
+            "definition": {
+                "type": "query_value",
+                "requests": [
+                    {
+                        "q": "sum:aegisai.request.count{*}",
+                        "aggregator": "sum"
+                    }
+                ],
+                "title": "Total Requests",
+                "precision": 0
+            }
+        },
+        {
+            "definition": {
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "q": "sum:aegisai.request.error{*}.as_count()",
+                        "display_type": "bars",
+                        "style": {
+                            "palette": "warm"
+                        }
+                    }
+                ],
+                "title": "Error Count Over Time"
+            }
+        },
+        {
+            "definition": {
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "q": "avg:aegisai.prompt.risk{*} by {severity}",
+                        "display_type": "line",
+                        "style": {
+                            "palette": "semantic"
+                        }
+                    }
+                ],
+                "title": "Prompt Risk Level (0=Low, 1=Medium, 2=High)"
+            }
+        },
+        {
+            "definition": {
                 "type": "toplist",
                 "requests": [
                     {
-                        "q": "top(sum:aegisai.tokens.count{*} by {malicious}.as_count(), 10, 'mean', 'desc')"
+                        "q": "top(sum:aegisai.tokens.used{*} by {malicious}.as_count(), 10, 'mean', 'desc')"
                     }
                 ],
                 "title": "Token Usage by Request Type"

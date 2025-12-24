@@ -2,11 +2,12 @@
     "name": "AegisAI - Prompt Injection Detection",
     "type": "log alert",
     "query": "logs(\"service:aegisai status:warn @prompt_injection:true\").index(\"*\").rollup(\"count\").last(\"5m\") > 0",
-    "message": "⚠️ **Prompt Injection Detected** \\n\\nA malicious prompt injection attempt has been detected by AegisAI.\\n\\n**Service:** aegisai\\n**Environment:** {{env.name}}\\n**Detection Time:** {{last_triggered_at}}\\n\\n**Matched Patterns:** {{@matched_patterns.name}}\\n\\n**Action Required:**\\n1. Review the incident in the AegisAI dashboard\\n2. Analyze the AI autopsy report\\n3. Implement suggested prompt fixes\\n\\n@slack-aegisai-alerts",
+    "message": "## ⚠️ Prompt Injection Detected\n\n**SEV-1 Security Alert**\n\nA malicious prompt injection attempt has been detected by AegisAI.\n\n**Service:** aegisai\n**Environment:** {{env.name}}\n**Detection Time:** {{last_triggered_at}}\n\n**Matched Patterns:** {{@matched_patterns.name}}\n\n**Action Required:**\n1. Review the incident in the AegisAI dashboard\n2. Analyze the AI autopsy report\n3. Implement suggested prompt fixes\n\n@slack-aegisai-alerts",
     "tags": [
         "service:aegisai",
         "security:prompt-injection",
-        "priority:critical"
+        "priority:critical",
+        "severity:sev1"
     ],
     "options": {
         "thresholds": {
@@ -17,7 +18,7 @@
         "notify_no_data": false,
         "renotify_interval": 0,
         "include_tags": true,
-        "escalation_message": "Prompt injection incident still active. Please investigate immediately.",
+        "escalation_message": "**ESCALATION:** Prompt injection incident still active. Please investigate immediately.",
         "enable_logs_sample": true
     },
     "priority": 1,
