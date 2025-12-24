@@ -1,0 +1,149 @@
+{
+    "title": "AegisAI - LLM Observability Dashboard",
+    "description": "Comprehensive monitoring dashboard for AegisAI - The Black Box Flight Recorder for LLM Applications",
+    "widgets": [
+        {
+            "definition": {
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "q": "sum:aegisai.request.latency{*}.as_count()",
+                        "display_type": "line",
+                        "style": {
+                            "palette": "dog_classic",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        }
+                    }
+                ],
+                "title": "Request Latency Over Time",
+                "show_legend": true,
+                "legend_size": "0"
+            }
+        },
+        {
+            "definition": {
+                "type": "query_value",
+                "requests": [
+                    {
+                        "q": "avg:aegisai.request.latency{*}",
+                        "aggregator": "avg"
+                    }
+                ],
+                "title": "Average Response Latency",
+                "precision": 0
+            }
+        },
+        {
+            "definition": {
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "q": "sum:aegisai.tokens.count{*}.as_count()",
+                        "display_type": "bars",
+                        "style": {
+                            "palette": "purple",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        }
+                    }
+                ],
+                "title": "Token Usage Over Time"
+            }
+        },
+        {
+            "definition": {
+                "type": "toplist",
+                "requests": [
+                    {
+                        "q": "top(sum:aegisai.tokens.count{*} by {malicious}.as_count(), 10, 'mean', 'desc')"
+                    }
+                ],
+                "title": "Token Usage by Request Type"
+            }
+        },
+        {
+            "definition": {
+                "type": "event_timeline",
+                "query": "source:aegisai priority:all",
+                "title": "Incident Timeline"
+            }
+        },
+        {
+            "definition": {
+                "type": "log_stream",
+                "query": "service:aegisai status:warn",
+                "columns": [
+                    "host",
+                    "service",
+                    "@prompt_injection",
+                    "@matched_patterns"
+                ],
+                "title": "Malicious Prompts Log Stream",
+                "show_date_column": true,
+                "show_message_column": true,
+                "message_display": "expanded-md"
+            }
+        },
+        {
+            "definition": {
+                "type": "query_value",
+                "requests": [
+                    {
+                        "q": "sum:aegisai.tokens.count{*}",
+                        "aggregator": "sum"
+                    }
+                ],
+                "title": "Total Tokens Consumed",
+                "precision": 0
+            }
+        },
+        {
+            "definition": {
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "q": "sum:aegisai.tokens.count{malicious:true}.as_count()",
+                        "display_type": "bars",
+                        "style": {
+                            "palette": "warm"
+                        }
+                    },
+                    {
+                        "q": "sum:aegisai.tokens.count{malicious:false}.as_count()",
+                        "display_type": "bars",
+                        "style": {
+                            "palette": "cool"
+                        }
+                    }
+                ],
+                "title": "Safe vs Malicious Requests"
+            }
+        },
+        {
+            "definition": {
+                "type": "check_status",
+                "title": "AegisAI Health Status",
+                "check": "aegisai.backend.health",
+                "grouping": "cluster",
+                "tags": [
+                    "*"
+                ]
+            }
+        }
+    ],
+    "template_variables": [
+        {
+            "name": "env",
+            "default": "dev",
+            "prefix": "env"
+        }
+    ],
+    "layout_type": "ordered",
+    "is_read_only": false,
+    "notify_list": [],
+    "tags": [
+        "service:aegisai",
+        "team:platform"
+    ]
+}
