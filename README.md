@@ -69,6 +69,12 @@ GOOGLE_CLOUD_PROJECT=aegisai-482123
 DATADOG_API_KEY=your_api_key
 DATADOG_APP_KEY=your_app_key
 DATADOG_SITE=us3.datadoghq.com
+DD_ENV=dev
+
+# Datadog Organization
+# Organization Name: AegisAI
+# Site: us3.datadoghq.com
+# Find your API keys at: https://us3.datadoghq.com/organization-settings/api-keys
 
 # Frontend: frontend/.env.local
 NEXT_PUBLIC_API_URL=http://localhost:3001
@@ -149,6 +155,15 @@ Most hackathon projects:
 - ✅ 100% test coverage
 
 ## 📊 Datadog Integration
+
+### Organization Details
+- **Organization**: AegisAI
+- **Site**: us3.datadoghq.com
+- **Dashboard**: https://us3.datadoghq.com/dashboard/lists
+- **Monitors**: https://us3.datadoghq.com/monitors/manage
+- **Incidents**: https://us3.datadoghq.com/incidents
+- **Metrics Explorer**: https://us3.datadoghq.com/metric/explorer
+- **Logs**: https://us3.datadoghq.com/logs
 
 ### Browser Logs
 Tracks every LLM interaction:
@@ -453,22 +468,6 @@ POST /api/incidents/:id/replay
 POST /api/incidents/:id/executive-summary
 ```
 
-## 🎯 Demo Script (3 Minutes)
-
-1. **Show safe interaction** → Clean response
-2. **Submit malicious prompt** → Red banner appears
-3. **Navigate to incidents** → Show detected threat
-4. **Click incident** → Display autopsy report
-5. **Generate fix** → Show AI-suggested rewrite
-6. **Show Datadog logs** → Real-time monitoring
-
-**Closing line:**
-> "This is not just an LLM app — it's a production-grade, self-defending AI system with observability, security, and automated response."
-
-## 📝 License
-
-© 2025 AegisAI - Built for Datadog + Google Cloud Hackathon
-
 ## 🙏 Acknowledgments
 
 - **Datadog:** Observability platform
@@ -478,5 +477,5 @@ POST /api/incidents/:id/executive-summary
 ---
 
 **Status:** ✅ Production-Ready  
-**Last Updated:** December 2025  
+**Last Updated:** December 2024  
 **Hackathon:** Datadog + Google Cloud 2025
