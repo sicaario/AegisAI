@@ -2,8 +2,6 @@
 
 > Production-Ready AI Security Observability Platform
 
-**Built for the Datadog + Google Cloud Hackathon 2025**
-
 ## 🎯 What is AegisAI?
 
 AegisAI is a **Black Box Flight Recorder for LLM Applications** that provides real-time threat detection, incident management, and AI-powered security analysis. It acts as a production-grade security layer for AI systems, automatically detecting prompt injection attacks, creating incidents, and providing actionable insights.
@@ -467,15 +465,3 @@ POST /api/incidents/:id/replay
 # Executive summary
 POST /api/incidents/:id/executive-summary
 ```
-
-## 🙏 Acknowledgments
-
-- **Datadog:** Observability platform
-- **Google Cloud:** Vertex AI and Gemini
-- **Hackathon Organizers:** For the opportunity
-
----
-
-**Status:** ✅ Production-Ready  
-**Last Updated:** December 2024  
-**Hackathon:** Datadog + Google Cloud 2025
